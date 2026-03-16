@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Clade declaration — part of the gv-clade-index registry
+# See: https://github.com/hyperpolymath/gv-clade-index
+
+[identity]
+uuid = "812c9554-d027-59ba-ad89-abd5f7f2f1c6"
+primary-forge = "github"
+primary-owner = "hyperpolymath"
+canonical-name = "MinixSDK.jl"
+prefixed-name = "dx-MinixSDK.jl"
+
+[clade]
+primary = "dx"
+secondary = ["ix"]
+assigned = "2026-03-16"
+rationale = ""
+
+[forges]
+github = "hyperpolymath/MinixSDK.jl"
+gitlab = "hyperpolymath/MinixSDK.jl"
+bitbucket = "hyperpolymath/MinixSDK.jl"
+
+[lineage]
+type = "standalone"
+parent = "Julia package — Minix SDK bindings"
+born = "2026-03-16"
