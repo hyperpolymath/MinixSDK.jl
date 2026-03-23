@@ -1,22 +1,64 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
 = MinixSDK.jl Roadmap
+:description: Planned features and milestones for MinixSDK.jl
+:license: PMPL-1.0-or-later
+:toc: auto
+:toc-placement!: header
+:source-highlighter: pygments
+:pygments-style: monokai
+:icons: font
+
+toc::[]
 
 == Phase 1: The Cross-Bridge (Current)
-* [x] Basic directory structure and Project.toml.
-* [x] C-code generation stubs for MINIX services.
+
+* **Status:** ✅ Complete
+* **Tasks:**
+** Basic directory structure and `Project.toml`.
+** C-code generation stubs for MINIX services.
+
+---
 
 == Phase 2: Microkernel IPC
-* [ ] **Messaging Interface**: Implement the MINIX `sendrec` and `notify` patterns in Julia for remote IPC.
-* [ ] **VFS Handlers**: Tools to write MINIX Virtual File System (VFS) servers in Julia.
+
+* **Status:** ❌ Not Started
+* **Tasks:**
+** [ ] Messaging Interface: Implement the MINIX `sendrec` and `notify` patterns in Julia for remote IPC.
+** [ ] VFS Handlers: Tools to write MINIX Virtual File System (VFS) servers in Julia.
+
+---
 
 == Phase 3: High-Assurance Deployment
-* [ ] **Axiom Verification**: Link with `Axiom.jl` to verify MINIX service logic.
-* [ ] **Reincarnation Tests**: Integration with the MINIX `RS` (Reincarnation Server).
+
+* **Status:** ❌ Not Started
+* **Tasks:**
+** [ ] Axiom Verification: Link with https://github.com/JuliaSymbolics/Axiom.jl[Axiom.jl] to verify MINIX service logic.
+** [ ] Reincarnation Tests: Integration with the MINIX RS (Reincarnation Server) for fault tolerance.
+
+---
 
 == Phase 4: Alternative Runtimes (Research)
-* [ ] **WASM on MINIX**: Port a lightweight WebAssembly runtime to MINIX to allow "Julia-to-WASM" execution.
-* [ ] **Distilled BEAM**: Explore porting a minimal Erlang VM (BEAM) to run as a native MINIX service for fault-tolerant orchestration.
 
+* **Status:** ❌ Not Started
+* **Tasks:**
+** [ ] WASM on MINIX: Port a lightweight WebAssembly runtime to MINIX to allow "Julia-to-WASM" execution.
+** [ ] Distilled BEAM: Explore porting a minimal Erlang VM (BEAM) to run as a native MINIX service for fault-tolerant orchestration.
+
+---
 == Future Horizons (v1.0+)
-* [ ] **Native Minix Port**: Collaborate with the Julia community on a native LLVM-based MINIX target.
-* [ ] **Embedded Real-time**: Extend to other microkernels like seL4 or QNX.
+
+* **Status:** ❌ Not Started
+* **Tasks:**
+** [ ] Native Minix Port: Collaborate with the Julia community on a native LLVM-based MINIX target.
+** [ ] Embedded Real-time: Extend to other microkernels like seL4 or QNX.
+
+---
+== How to Contribute
+
+* Report issues or suggest features: https://github.com/hyperpolymath/MinixSDK.jl/issues
+* Submit pull requests for new features or bug fixes.
+* Join discussions on the https://github.com/hyperpolymath/MinixSDK.jl/discussions[Discussions] page.
+
+---
+== Acknowledgments
+
+Roadmap inspired by MINIX 3, Julia, and Hyperpolymath communities. Special thanks to all contributors!
