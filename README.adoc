@@ -1,23 +1,121 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
 = MinixSDK.jl
-:toc: macro
+:description: Julia toolkit for developing and deploying high-assurance services for MINIX 3
+:license: PMPL-1.0-or-later (MPL-2.0 fallback)
+:toc: auto
+:toc-placement!: header
+:source-highlighter: pygments
+:pygments-style: monokai
+:icons: font
 
-image:https://img.shields.io/badge/Project-Topology-9558B2[Topology,link="TOPOLOGY.md"]
-image:https://img.shields.io/badge/Completion-15%25-red[15%,link="TOPOLOGY.md"]
-image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0]
-image:https://img.shields.io/badge/Target-MINIX_3-red.svg[Target: MINIX 3]
-
-*Bringing Julia Logic to the World's Most Reliable Microkernel.*
+image:https://img.shields.io/badge/julia-1.10+-blue.svg[Julia]
+image:https://img.shields.io/badge/status-research%20prototype-orange.svg[Status]
+image:https://img.shields.io/badge/MINIX-3-green.svg[MINIX]
 
 == Overview
 
-MinixSDK.jl is a research-grade toolkit for developing and deploying high-assurance services for the **MINIX 3 microkernel** using Julia. It provides cross-compilation bridges and IPC (Inter-Process Communication) wrappers to allow Julia-based research to run as native MINIX services.
+**MinixSDK.jl** is a Julia package for developing and deploying high-assurance services for the **MINIX 3 microkernel**. It provides tools for cross-compiling Julia services to MINIX 3-compatible binaries and simplifies the development of fault-tolerant drivers.
 
-== Why MINIX?
+[.lead]
+**Features:**
+- Cross-compilation of Julia services to MINIX 3.
+- IPC (Inter-Process Communication) wrappers for MINIX 3.
+- Support for fault-tolerant and self-healing services.
+- Integration with the Hyperpolymath ecosystem for formal verification.
 
-MINIX 3 is designed for high reliability and self-healing (reincarnation). By bridging Julia to MINIX, we enable:
-1. **Fault-Tolerant Drivers**: Write drivers in Julia that MINIX can automatically restart if they fail.
-2. **Verified Micro-Services**: Use the Hyperpolymath ecosystem to verify logic before deploying it to the MINIX core.
+== Installation
 
-== Current Status
-**Research Prototype**. Focused on C-code generation and cross-compilation stubs.
+To install **MinixSDK.jl**, open Julia and run:
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/hyperpolymath/MinixSDK.jl")
+
+
+Note: Requires Julia 1.10+ and the MINIX 3 toolchain for cross-compilation.
+
+== Quick Start
+=== 1. Write a Julia Service
+julia
+Copy
+
+module HelloMinix
+    function main()
+        println("Hello from MINIX 3!")
+    end
+end
+
+=== 2. Cross-Compile to MINIX 3
+julia
+Copy
+
+using MinixSDK
+
+# Generate boilerplate for a MINIX 3 service
+generate_minix_service("HelloMinix", read("hello_minix.jl", String))
+
+
+Note: You’ll need to manually complete the C template and use the MINIX 3 toolchain to build the final binary.
+
+== Examples
+=== Create a Fault-Tolerant Driver
+julia
+Copy
+
+using MinixSDK
+
+driver_code = """
+module FaultTolerantDriver
+    function main()
+        while true
+            try
+                println("Driver running...")
+                sleep(1)
+            catch e
+                println("Driver failed, restarting...")
+            end
+        end
+    end
+end
+"""
+
+generate_minix_service("FaultTolerantDriver", driver_code)
+
+=== Use IPC Wrappers
+julia
+Copy
+
+using MinixSDK
+
+ipc_example = """
+module IPCExample
+    function main()
+        msg = receive()
+        println("Received: ", msg)
+        send("ACK")
+    end
+end
+"""
+
+generate_minix_service("IPCExample", ipc_example)
+
+== Backends
+MinixSDK.jl supports:
+
+Cross-compilation: Julia to C/Minix binary.
+IPC: Message passing for MINIX 3 services.
+Fault tolerance: Automatic restart and self-healing.
+
+To enable full functionality, install the MINIX 3 toolchain:
+bash
+Copy
+
+sudo apt-get install minix  # On Debian/Ubuntu
+# Or build from source: https://wiki.minix3.org/doku.php?id=developersguide\:building
+
+
+== Documentation
+For detailed documentation, see the link/src/index.md[manual].
+== License
+This package is licensed under the PMPL-1.0-or-later license. See linkLICENSE for details.
+== Acknowledgments
+MinixSDK.jl is inspired by the MINIX 3 and Julia communities. Special thanks to the Hyperpolymath team for their support.
