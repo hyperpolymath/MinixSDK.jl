@@ -1,34 +1,115 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
 = MinixSDK.jl — Show Me The Receipts
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 :toc:
 :icons: font
 
-The README makes claims. This file backs them up.
+The README makes claims. This file backs them up with file paths, honest caveats,
+and a map of what is actually present versus what is aspirational.
 
 [quote, README]
 ____
-MinixSDK.jl is a research-grade toolkit for developing and deploying high-assurance services for the **MINIX 3 microkernel** using Julia. It provides cross-compilation bridges and IPC (Inter-Process Communication) wrappers to allow Julia-based research to run as native MINIX services.
+MinixSDK.jl is a Julia toolkit for developing and deploying high-assurance services
+for the MINIX 3 microkernel. It provides tools for cross-compiling Julia services to
+MINIX 3-compatible binaries and simplifies the development of fault-tolerant drivers.
 ____
 
-== Technology Choices
+== What It Actually Does Today
+
+=== Claim: Cross-compilation of Julia services to MINIX 3
+
+*Partially true.* `cross_compile_to_minix(f::Function)` in `src/MinixSDK.jl` exists
+and its method signature is correct, but the body is a research stub — it prints a
+diagnostic message and returns the string `"minix_service.c"`. The note in README
+section _Quick Start_ is honest: "You'll need to manually complete the C template
+and use the MINIX 3 toolchain to build the final binary." A real implementation
+would require StaticCompiler.jl or direct Clang.jl lowering, neither of which is
+wired yet.
+
+=== Claim: IPC wrappers for MINIX 3 message passing
+
+`generate_minix_service(name::String, logic::String)` in `src/MinixSDK.jl` emits a
+C skeleton with `#include <minix/drivers.h>` as its header. The skeleton compiles
+under the MINIX 3 toolchain; the IPC message-passing body is a stub comment. This
+is the correct scaffolding for a driver server, but the `send`/`receive` semantics
+are not yet implemented in Julia.
+
+*Honest caveat:* MinixSDK.jl is a research-grade prototype. Both exported functions
+produce correct types and pass all unit tests, but neither produces a runnable MINIX
+binary without additional external toolchain work. The package is suitable for
+exploring the interface design; it is not yet production-usable for driver
+deployment.
+
+== How It Works
+
+The module exports exactly two functions (`cross_compile_to_minix`, `generate_minix_service`).
+The critical path is:
+
+. Julia caller invokes `generate_minix_service("ServiceName", julia_source_code)`.
+. The function returns a C source template string containing `#include <minix/drivers.h>`
+  and a placeholder comment where the translated logic would be inserted.
+. The caller is expected to write that string to a `.c` file, compile with the MINIX 3
+  `cc` toolchain, and link against `libsys`.
+
+The test suite in `test/runtests.jl` verifies that both functions return `String`,
+that the C template contains the required header, and that method signatures are
+correct. It also chains into `test/e2e_test.jl` and `test/property_test.jl` for
+end-to-end and property-based coverage.
+
+== Dogfooded Across The Account
 
 [cols="1,2"]
 |===
-| Technology | Learn More
+| Project | Where MinixSDK.jl fits
 
-| **Julia** | https://julialang.org
+| `SiliconCore.jl`
+| MINIX is one of the target OS symbols in `CpuFeatures.os` (`:minix`); a deployed
+  MinixSDK service would consume SiliconCore feature detection to select SIMD paths.
+
+| `developer-ecosystem/julia-ecosystem/`
+| MinixSDK is catalogued as a systems-integration package in the Julia ecosystem
+  index alongside ShellIntegration.jl and SiliconCore.jl.
+
+| `hypatia` CI scan
+| `hypatia-scan.yml` runs on every push; the MINIX toolchain availability check is
+  a known caveat in the scan notes.
 |===
 
 == File Map
 
-[cols="1,2"]
+[cols="1,3"]
 |===
 | Path | What's There
 
-| `src/` | Source code
-| `test(s)/` | Test suite
+| `src/MinixSDK.jl`
+| Entire module — two exported functions, both with full docstrings.
+  `cross_compile_to_minix` is the stub lowering path; `generate_minix_service`
+  emits the C driver template.
+
+| `test/runtests.jl`
+| Primary test suite: 8 testsets covering return type, header content, method
+  signatures, and export presence. Chains to `e2e_test.jl` and `property_test.jl`.
+
+| `test/e2e_test.jl`
+| End-to-end scenario: calls both functions in sequence and validates the output
+  can be treated as a compilation input.
+
+| `test/property_test.jl`
+| Property-based checks: arbitrary service names and logic strings must always
+  return a valid C header skeleton.
+
+| `Project.toml`
+| Package identity (uuid `d4e5f6a7...`), Julia ≥ 1.10, only stdlib `Libdl` as
+  runtime dependency. No external Julia packages needed.
+
+| `benches/`
+| Benchmark harness (stub; no MINIX hardware available in CI).
+
+| `TOPOLOGY.md`
+| Dependency graph showing MinixSDK at the system integration layer below
+  ShellIntegration.jl and above the bare MINIX kernel ABI.
 |===
 
 == Questions?
 
-Open an issue or reach out directly — happy to explain anything in more detail.
+Open an issue or reach out directly — happy to explain any design choice.
