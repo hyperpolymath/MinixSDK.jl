@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 = MinixSDK.jl
 :description: Julia toolkit for developing and deploying high-assurance services for MINIX 3
-:license: PMPL-1.0-or-later (MPL-2.0 fallback)
+:license: MPL-2.0 (MPL-2.0 fallback)
 :toc: auto
 :toc-placement!: header
 :source-highlighter: pygments
@@ -122,6 +122,6 @@ sudo apt-get install minix  # On Debian/Ubuntu
 == Documentation
 For detailed documentation, see the link/src/index.md[manual].
 == License
-This package is licensed under the PMPL-1.0-or-later license. See linkLICENSE for details.
+This package is licensed under the MPL-2.0 license. See linkLICENSE for details.
 == Acknowledgments
 MinixSDK.jl is inspired by the MINIX 3 and Julia communities. Special thanks to the Hyperpolymath team for their support.

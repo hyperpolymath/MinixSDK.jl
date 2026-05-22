@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
-# (PMPL-1.0-or-later preferred; MPL-2.0 required for Julia ecosystem)
+# (MPL-2.0 preferred; MPL-2.0 required for Julia ecosystem)
 # E2E pipeline tests for MinixSDK.jl.
 # Tests the full service generation pipeline: function → cross-compilation →
 # C service boilerplate generation → output validation.
